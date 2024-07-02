@@ -20,6 +20,10 @@ app.post("/saichologist", (req, res) => {
     res.send(`<pre>${JSON.stringify(req)}</pre>`);
 });
 
+app.get("/saichologist", (req, res) =>{
+	res.send("<h1>Saichologist!</h1>");
+});
+
 app.get('/about', function (req, res) {
 	res.sendFile(path.join(__dirname, '..', 'components', 'about.htm'));
 });
