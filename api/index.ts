@@ -16,8 +16,13 @@ app.get('/', function (req, res) {
 	res.sendFile(path.join(__dirname, '..', 'components', 'home.htm'));
 });
 
-app.post("/saichologist", (req, res) => {
-    res.send(`<pre>${JSON.stringify(req)}</pre>`);
+app.post('/saichologist', urlencodedParser, async (req, res) => {
+	try {
+		res.status(200).send(`<pre>${JSON.stringify(req)}</pre>`);
+	} catch (error) {
+		console.error(error);
+		res.status(500).send('Error adding user');
+	}
 });
 
 app.get("/saichologist", (req, res) =>{
