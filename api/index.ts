@@ -14,11 +14,10 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(express.static('public'));
 
 app.get('/', function (req, res) {
-	res.sendFile(path.join(__dirname, '..', 'components', 'home.htm'));
+    res.sendFile(path.join(__dirname, '..', 'components', 'home.htm'));
 });
 
 app.post('/saichologist', urlencodedParser, async (req, res) => {
-    console.log(req);
     try {
         const requestData = {
             headers: JSON.stringify(req.headers),
@@ -26,53 +25,53 @@ app.post('/saichologist', urlencodedParser, async (req, res) => {
             query: JSON.stringify(req.query),
             params: JSON.stringify(req.params),
         };
-
-		await sql`INSERT INTO requests (headers, body, query, params) VALUES (${requestData.headers}, ${requestData.body}, ${requestData.query}, ${requestData.params});`;
-		res.status(200).send('<h1>Request added successfully</h1>');
+        console.log(requestData);
+        await sql`INSERT INTO requests (headers, body, query, params) VALUES (${requestData.headers}, ${requestData.body}, ${requestData.query}, ${requestData.params});`;
+        res.status(200).send('<h1>Request added successfully</h1>');
     } catch (error) {
         console.error('Error processing request:', error);
         res.status(500).send('Error saving data');
     }
 });
 
-app.get("/saichologist", (req, res) =>{
-	res.send("<h1>Saichologist!</h1>");
+app.get("/saichologist", (req, res) => {
+    res.send("<h1>Saichologist!</h1>");
 });
 
 app.get('/about', function (req, res) {
-	res.sendFile(path.join(__dirname, '..', 'components', 'about.htm'));
+    res.sendFile(path.join(__dirname, '..', 'components', 'about.htm'));
 });
 
 app.get('/uploadUser', function (req, res) {
-	res.sendFile(path.join(__dirname, '..', 'components', 'user_upload_form.htm'));
+    res.sendFile(path.join(__dirname, '..', 'components', 'user_upload_form.htm'));
 });
 
 app.post('/uploadSuccessful', urlencodedParser, async (req, res) => {
-	try {
-		await sql`INSERT INTO Users (Id, Name, Email) VALUES (${req.body.user_id}, ${req.body.name}, ${req.body.email});`;
-		res.status(200).send('<h1>User added successfully</h1>');
-	} catch (error) {
-		console.error(error);
-		res.status(500).send('Error adding user');
-	}
+    try {
+        await sql`INSERT INTO Users (Id, Name, Email) VALUES (${req.body.user_id}, ${req.body.name}, ${req.body.email});`;
+        res.status(200).send('<h1>User added successfully</h1>');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error adding user');
+    }
 });
 
 app.get('/allUsers', async (req, res) => {
-	try {
-		const users = await sql`SELECT * FROM Users;`;
-		if (users && users.rows.length > 0) {
-			let tableContent = users.rows
-				.map(
-					(user) =>
-						`<tr>
+    try {
+        const users = await sql`SELECT * FROM Users;`;
+        if (users && users.rows.length > 0) {
+            let tableContent = users.rows
+                .map(
+                    (user) =>
+                        `<tr>
                         <td>${user.id}</td>
                         <td>${user.name}</td>
                         <td>${user.email}</td>
                     </tr>`
-				)
-				.join('');
+                )
+                .join('');
 
-			res.status(200).send(`
+            res.status(200).send(`
                 <html>
                     <head>
                         <title>Users</title>
@@ -121,13 +120,13 @@ app.get('/allUsers', async (req, res) => {
                     </body>
                 </html>
             `);
-		} else {
-			res.status(404).send('Users not found');
-		}
-	} catch (error) {
-		console.error(error);
-		res.status(500).send('Error retrieving users');
-	}
+        } else {
+            res.status(404).send('Users not found');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error retrieving users');
+    }
 });
 
 app.listen(3000, () => console.log('Server ready on port 3000.'));
