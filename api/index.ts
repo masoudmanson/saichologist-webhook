@@ -2,14 +2,11 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
-const { sql, Client } = require('@vercel/postgres');
+const { sql } = require('@vercel/postgres');
 
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
-
-const client = new Client();
-client.connect();
 
 // Create application/x-www-form-urlencoded parser
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -21,6 +18,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/saichologist', urlencodedParser, async (req, res) => {
+    console.log(req);
     try {
         const requestData = {
             headers: req.headers,
@@ -36,15 +34,6 @@ app.post('/saichologist', urlencodedParser, async (req, res) => {
         res.status(500).send('Error saving data');
     }
 });
-
-// app.post('/saichologist', urlencodedParser, async (req, res) => {
-// 	try {
-// 		res.status(200).send(`<pre>${JSON.stringify(req.body, null, 2)}</pre>`);
-// 	} catch (error) {
-// 		console.error(error);
-// 		res.status(500).send('Error adding user');
-// 	}
-// });
 
 app.get("/saichologist", (req, res) =>{
 	res.send("<h1>Saichologist!</h1>");
