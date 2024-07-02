@@ -21,10 +21,10 @@ app.post('/saichologist', urlencodedParser, async (req, res) => {
     console.log(req);
     try {
         const requestData = {
-            headers: req.headers,
-            body: req.body,
-            query: req.query,
-            params: req.params
+            headers: JSON.stringify(req.headers),
+            body: JSON.stringify(req.body),
+            query: JSON.stringify(req.query),
+            params: JSON.stringify(req.params),
         };
 
 		await sql`INSERT INTO requests (headers, body, query, params) VALUES (${requestData.headers}, ${requestData.body}, ${requestData.query}, ${requestData.params});`;
