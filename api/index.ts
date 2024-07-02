@@ -29,21 +29,8 @@ app.post('/saichologist', urlencodedParser, async (req, res) => {
             params: req.params
         };
 
-        const insertQuery = `
-            INSERT INTO requests (headers, body, query, params)
-            VALUES ($1, $2, $3, $4)
-            RETURNING *;
-        `;
-        const values = [
-            requestData.headers,
-            requestData.body,
-            requestData.query,
-            requestData.params
-        ];
-
-        const result = await client.query(insertQuery, values);
-
-        res.status(200).send(`<pre>${JSON.stringify(result.rows[0], null, 2)}</pre>`);
+		await sql`INSERT INTO requests (headers, body, query, params) VALUES (${requestData.headers}, ${requestData.body}, ${requestData.query}, ${requestData.params});`;
+		res.status(200).send('<h1>Request added successfully</h1>');
     } catch (error) {
         console.error('Error processing request:', error);
         res.status(500).send('Error saving data');
