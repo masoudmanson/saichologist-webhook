@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
 
 app.post('/saichologist', urlencodedParser, async (req, res) => {
 	try {
-		res.status(200).send(`<pre>${req}</pre>`);
+		res.status(200).send(`<pre>${JSON.stringify(req.body, null, 2)}</pre>`);
 	} catch (error) {
 		console.error(error);
 		res.status(500).send('Error adding user');
