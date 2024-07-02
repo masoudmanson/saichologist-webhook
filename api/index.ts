@@ -2,11 +2,14 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
-const { sql } = require('@vercel/postgres');
+const { sql, Client } = require('@vercel/postgres');
 
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
+
+const client = new Client();
+client.connect();
 
 // Create application/x-www-form-urlencoded parser
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -17,7 +20,6 @@ app.get('/', function (req, res) {
 	res.sendFile(path.join(__dirname, '..', 'components', 'home.htm'));
 });
 
-
 app.post('/saichologist', urlencodedParser, async (req, res) => {
     try {
         const requestData = {
@@ -27,22 +29,26 @@ app.post('/saichologist', urlencodedParser, async (req, res) => {
             params: req.params
         };
 
-        const requestString = JSON.stringify(requestData, null, 2);
+        const insertQuery = `
+            INSERT INTO requests (headers, body, query, params)
+            VALUES ($1, $2, $3, $4)
+            RETURNING *;
+        `;
+        const values = [
+            requestData.headers,
+            requestData.body,
+            requestData.query,
+            requestData.params
+        ];
 
-        fs.writeFile('data.txt', requestString, (err) => {
-            if (err) {
-                console.error('Error writing to file', err);
-                res.status(500).send('Error saving data');
-            } else {
-                res.status(200).send(`<pre>${requestString}</pre>`);
-            }
-        });
+        const result = await client.query(insertQuery, values);
+
+        res.status(200).send(`<pre>${JSON.stringify(result.rows[0], null, 2)}</pre>`);
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error processing request');
+        console.error('Error processing request:', error);
+        res.status(500).send('Error saving data');
     }
 });
-
 
 // app.post('/saichologist', urlencodedParser, async (req, res) => {
 // 	try {
