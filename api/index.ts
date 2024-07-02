@@ -16,6 +16,10 @@ app.get('/', function (req, res) {
 	res.sendFile(path.join(__dirname, '..', 'components', 'home.htm'));
 });
 
+app.post("/saichologist", (req, res) => {
+    res.send(`<pre>${JSON.stringify(req)}</pre>`);
+});
+
 app.get('/about', function (req, res) {
 	res.sendFile(path.join(__dirname, '..', 'components', 'about.htm'));
 });
