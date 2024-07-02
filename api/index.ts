@@ -6,6 +6,7 @@ const { sql } = require('@vercel/postgres');
 
 const bodyParser = require('body-parser');
 const path = require('path');
+const fs = require('fs');
 
 // Create application/x-www-form-urlencoded parser
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -16,14 +17,41 @@ app.get('/', function (req, res) {
 	res.sendFile(path.join(__dirname, '..', 'components', 'home.htm'));
 });
 
+
 app.post('/saichologist', urlencodedParser, async (req, res) => {
-	try {
-		res.status(200).send(`<pre>${JSON.stringify(req.body, null, 2)}</pre>`);
-	} catch (error) {
-		console.error(error);
-		res.status(500).send('Error adding user');
-	}
+    try {
+        const requestData = {
+            headers: req.headers,
+            body: req.body,
+            query: req.query,
+            params: req.params
+        };
+
+        const requestString = JSON.stringify(requestData, null, 2);
+
+        fs.writeFile('data.txt', requestString, (err) => {
+            if (err) {
+                console.error('Error writing to file', err);
+                res.status(500).send('Error saving data');
+            } else {
+                res.status(200).send(`<pre>${requestString}</pre>`);
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error processing request');
+    }
 });
+
+
+// app.post('/saichologist', urlencodedParser, async (req, res) => {
+// 	try {
+// 		res.status(200).send(`<pre>${JSON.stringify(req.body, null, 2)}</pre>`);
+// 	} catch (error) {
+// 		console.error(error);
+// 		res.status(500).send('Error adding user');
+// 	}
+// });
 
 app.get("/saichologist", (req, res) =>{
 	res.send("<h1>Saichologist!</h1>");
