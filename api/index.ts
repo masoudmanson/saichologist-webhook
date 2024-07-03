@@ -29,7 +29,7 @@ app.post('/saichologist', urlencodedParser, async (req, res) => {
 
 app.get("/count", async (req, res) => {
     try {
-        const result = await sql`SELECT COUNT(id) FROM saichologist;`;
+        const result = await sql`SELECT COUNT(id) FROM saichologist WHERE type="subscribe";`;
         const count = result.rows[0].count;
         res.status(200).send(`
             <html>
