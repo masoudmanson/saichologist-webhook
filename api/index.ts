@@ -36,8 +36,20 @@ app.get("/count", async (req, res) => {
                 <head>
                     <title>Subscribers</title>
                     <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Mukta&display=swap');
+
+                        * {
+                            margin: 0;
+                            padding: 0;
+                        }
+
                         p {
-                            font-family: mukta, sans-serif;
+                            font-family: "Mukta", sans-serif;
+                            font-weight: 400;
+                            font-style: normal;
+                            font-size: 14;
+                            line-height: 20px;
+                            color: #001122;
                         }
                     </style>
                 </head>
