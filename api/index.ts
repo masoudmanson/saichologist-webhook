@@ -27,7 +27,14 @@ app.post('/saichologist', urlencodedParser, async (req, res) => {
     }
 });
 
-app.get("/saichologist", (req, res) => {
+app.get("/saichologist", async (req, res) => {
+    try {
+        const result = await sql`SELECT COUNT(id) FROM saichologist;`;
+        const count = result.rows[0].count;
+        res.status(200).send(count);
+    } catch (error) {
+        res.status(500).send('Error fetching data!');
+    }
     res.send("<h1>Saichologist!</h1>");
 });
 
