@@ -54,7 +54,7 @@ app.get("/count", async (req, res) => {
                     </style>
                 </head>
                 <body>
-                    <p>${count} others has joined!</p>
+                    <p>${count} others have joined!</p>
                 </body>
             </html>
         `);
