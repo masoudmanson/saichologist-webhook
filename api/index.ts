@@ -19,14 +19,7 @@ app.get('/', function (req, res) {
 
 app.post('/saichologist', urlencodedParser, async (req, res) => {
     try {
-        const requestData = {
-            headers: JSON.stringify(req.headers),
-            body: JSON.stringify(req.body),
-            query: JSON.stringify(req.query),
-            params: JSON.stringify(req.params),
-        };
-        console.log(requestData);
-        await sql`INSERT INTO requests (headers, body, query, params) VALUES (${requestData.headers}, ${requestData.body}, ${requestData.query}, ${requestData.params});`;
+        await sql`INSERT INTO saichologist (type, email, ip) VALUES (${req.body.type}, ${req.body["data[email]"]}, ${req.body["data[ip_opt]"]});`;
         res.status(200).send('<h1>Request added successfully</h1>');
     } catch (error) {
         console.error('Error processing request:', error);
