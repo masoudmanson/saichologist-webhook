@@ -27,32 +27,13 @@ app.post('/saichologist', urlencodedParser, async (req, res) => {
     }
 });
 
-app.get("/saichologist", async (req, res) => {
+app.get("/count", async (req, res) => {
     try {
         const result = await sql`SELECT COUNT(id) FROM saichologist;`;
         const count = result.rows[0].count;
         res.status(200).send(count);
     } catch (error) {
         res.status(500).send('Error fetching data!');
-    }
-    res.send("<h1>Saichologist!</h1>");
-});
-
-app.get('/about', function (req, res) {
-    res.sendFile(path.join(__dirname, '..', 'components', 'about.htm'));
-});
-
-app.get('/uploadUser', function (req, res) {
-    res.sendFile(path.join(__dirname, '..', 'components', 'user_upload_form.htm'));
-});
-
-app.post('/uploadSuccessful', urlencodedParser, async (req, res) => {
-    try {
-        await sql`INSERT INTO Users (Id, Name, Email) VALUES (${req.body.user_id}, ${req.body.name}, ${req.body.email});`;
-        res.status(200).send('<h1>User added successfully</h1>');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error adding user');
     }
 });
 
