@@ -27,6 +27,42 @@ app.post('/saichologist', urlencodedParser, async (req, res) => {
     }
 });
 
+app.get("/saichologist", async (req, res) => {
+    try {
+        const result = await sql`SELECT COUNT(id) FROM saichologist WHERE type = 'subscribe';`;
+        const count = result.rows[0].count;
+        res.status(200).send(`
+            <html>
+                <head>
+                    <title>Subscribers</title>
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;&display=swap');
+
+                        * {
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        p {
+                            font-family: "Mukta", sans-serif;
+                            font-weight: 300;
+                            font-style: normal;
+                            font-size: 14;
+                            line-height: 20px;
+                            color: #001122;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <p>${count} others have joined!</p>
+                </body>
+            </html>
+        `);
+    } catch (error) {
+        res.status(500).send('Error fetching data!');
+    }
+});
+
 app.get("/count", async (req, res) => {
     try {
         const result = await sql`SELECT COUNT(id) FROM saichologist WHERE type = 'subscribe';`;
